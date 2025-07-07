@@ -2,8 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
 
 @Schema({ timestamps: true })
-export class Status {
-	@Prop({ required: true, trim: true })
+export class Source {
+	@Prop({ required: true, trim: true, unique: true })
 	name: string
 
 	@Prop({ required: true })
@@ -13,5 +13,5 @@ export class Status {
 	description: string
 }
 
-export type StatusDocument = Status & Document
-export const StatusSchema = SchemaFactory.createForClass(Status)
+export type SourceDocument = Source & Document
+export const SourceSchema = SchemaFactory.createForClass(Source)

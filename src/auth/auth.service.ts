@@ -114,8 +114,12 @@ export class AuthService {
 		}
 	}
 
-	// 👤 Получение текущего пользователя
 	async getMe(userId: string) {
-		return this.userModel.findById(userId).select('-password -refreshToken')
+		const user = await this.userModel
+			.findById(userId)
+			.select('-password -refreshToken')
+			.lean()
+
+		return user
 	}
 }

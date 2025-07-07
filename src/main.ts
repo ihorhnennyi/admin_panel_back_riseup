@@ -10,22 +10,23 @@ async function bootstrap() {
 
 	const config = app.get(ConfigService)
 	const port = config.get<number>('app.port', 5000)
-	const frontendUrl = config.get<string>(
-		'frontend.url',
-		'http://localhost:3000'
-	)
 
-	// ✅ Разрешить CORS для фронта
+	const allowedOrigins = ['http://localhost:5173', 'http://localhost:5000']
+
 	app.enableCors({
-		origin: frontendUrl,
+		origin: (origin, callback) => {
+			if (!origin || allowedOrigins.includes(origin)) {
+				callback(null, true)
+			} else {
+				callback(new Error(`CORS error: ${origin} not allowed`))
+			}
+		},
 		credentials: true,
 	})
 
-	// ✅ Глобальные фильтры и интерцепторы
 	app.useGlobalFilters(new AllExceptionsFilter())
 	app.useGlobalInterceptors(new ResponseInterceptor())
 
-	// ✅ Настройка Swagger
 	const swaggerConfig = new DocumentBuilder()
 		.setTitle('Rise SRM Admin API')
 		.setDescription(
@@ -33,11 +34,7 @@ async function bootstrap() {
 		)
 		.setVersion('1.0.0')
 		.addBearerAuth(
-			{
-				type: 'http',
-				scheme: 'bearer',
-				bearerFormat: 'JWT',
-			},
+			{ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
 			'bearerAuth'
 		)
 		.build()
@@ -49,7 +46,6 @@ async function bootstrap() {
 
 	console.log(`🚀 Server running on http://localhost:${port}`)
 	console.log(`📘 Swagger:       http://localhost:${port}/api/docs`)
-	console.log(`🌍 API base URL:  http://localhost:${port}/`)
-	console.log(`🌐 Frontend URL:  ${frontendUrl}`)
+	console.log(`🌐 Frontend URL:  http://localhost:5173`)
 }
 bootstrap()

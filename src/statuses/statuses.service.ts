@@ -47,16 +47,10 @@ export class StatusesService {
 			throw new ConflictException('Статус с таким именем уже существует')
 		}
 
-		const count = await this.model.countDocuments()
-
 		const status = new this.model({
 			name: dto.name,
 			color: dto.color,
 			description: dto.description || '',
-			order: dto.order ?? count + 1,
-			type: dto.type || 'custom',
-			isDefault: dto.isDefault ?? false,
-			isActive: dto.isActive ?? true,
 		})
 
 		return status.save()
