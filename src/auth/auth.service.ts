@@ -97,7 +97,7 @@ export class AuthService {
 
 		const refreshToken = this.jwtService.sign(payload, {
 			secret: process.env.JWT_REFRESH_SECRET,
-			expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
+			expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '30d',
 		})
 
 		await this.userModel.updateOne({ _id: user._id }, { refreshToken })
