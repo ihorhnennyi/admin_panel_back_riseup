@@ -11,13 +11,18 @@ async function bootstrap() {
 	const config = app.get(ConfigService)
 	const port = config.get<number>('app.port', 5000)
 
-	const allowedOrigins = ['http://localhost:5173', 'http://localhost:5000']
+	const allowedOrigins = [
+		'http://localhost:5173',
+		'http://localhost:5000',
+		'http://workriseup.website',
+	]
 
 	app.enableCors({
-		origin: (origin, callback) => {
+		origin: (origin: string | undefined, callback) => {
 			if (!origin || allowedOrigins.includes(origin)) {
 				callback(null, true)
 			} else {
+				console.warn(`Blocked CORS request from: ${origin}`)
 				callback(new Error(`CORS error: ${origin} not allowed`))
 			}
 		},
